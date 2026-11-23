@@ -115,10 +115,11 @@ def test_vercel_entrypoint_never_starts_local_database(monkeypatch, system_flag,
             assert client.get("/api/orders").status_code == 503
 
 
-def test_repository_deployment_routes_to_public_backend_before_vite_alias(monkeypatch):
+def test_deployment_prefers_api_url_over_vite_alias(monkeypatch):
     root = Path(__file__).resolve().parents[1]
     settings = json.loads((root / "vercel.json").read_text())
-    monkeypatch.setenv("API_URL", settings["env"]["API_URL"])
+    assert "API_URL" not in settings.get("env", {})
+    monkeypatch.setenv("API_URL", "https://backend.example")
     monkeypatch.setenv("VITE_API_URL", "http://127.0.0.1.8000")
     monkeypatch.setattr("dotenv.load_dotenv", lambda *args, **kwargs: None)
     spec = importlib.util.spec_from_file_location("configured_deployment_test", root / "index.py")
