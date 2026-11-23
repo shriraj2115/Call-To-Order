@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.venv-mcp/
+.pytest_cache/
+*.db
+.env
+app/media/*
+!app/media/.gitkeep
+documents/
